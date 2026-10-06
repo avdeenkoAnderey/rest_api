@@ -37,6 +37,18 @@ def search_advertisements(
     title: str | None = Query(None),
     description: str | None = Query(None),
     author: str | None = Query(None),
+    price_min: float | None = Query(None),
+    price_max: float | None = Query(None),
+    date_from: str | None = Query(None),
+    date_to: str | None = Query(None),
 ):
-    results = db.search(title=title, description=description, author=author)
+    results = db.search(
+        title=title,
+        description=description,
+        author=author,
+        price_min=price_min,
+        price_max=price_max,
+        date_from=date_from,
+        date_to=date_to,
+    )
     return results

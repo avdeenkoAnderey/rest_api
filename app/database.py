@@ -37,7 +37,18 @@ class InMemoryDB:
             return True
         return False
 
-    def search(self, title: str | None = None, description: str | None = None, author: str | None = None) -> list[dict]:
+    def search(
+        self,
+        title: str | None = None,
+        description: str | None = None,
+        author: str | None = None,
+        price_min: float | None = None,
+        price_max: float | None = None,
+        date_from: str | None = None,
+        date_to: str | None = None,
+    ) -> list[dict]:
+        from datetime import datetime
+
         results = list(self._store.values())
         if title:
             results = [a for a in results if title.lower() in a["title"].lower()]
@@ -45,6 +56,16 @@ class InMemoryDB:
             results = [a for a in results if description.lower() in a["description"].lower()]
         if author:
             results = [a for a in results if author.lower() in a["author"].lower()]
+        if price_min is not None:
+            results = [a for a in results if a["price"] >= price_min]
+        if price_max is not None:
+            results = [a for a in results if a["price"] <= price_max]
+        if date_from:
+            df = datetime.fromisoformat(date_from)
+            results = [a for a in results if a["created_at"] >= df]
+        if date_to:
+            dt = datetime.fromisoformat(date_to)
+            results = [a for a in results if a["created_at"] <= dt]
         return results
 
 
